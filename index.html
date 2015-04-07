@@ -32,7 +32,7 @@
         var params = {
           'from': '2015-01-01', //moment(),
           'to': '2015-01-01', //moment(),
-          'unit': 'week',
+          'unit': 'month',
           'interval_count': 12,
           'born_event': '$signup'
         };
@@ -58,7 +58,7 @@
         
         var processResults = function(data, eventName, current_date, totalResults) {
           totalResults[current_date.toISOString().substring(0, 10)] = data[current_date.toISOString().substring(0, 10)];
-          current_date.setDate(current_date.getDate() + 1);
+          current_date.setDate(current_date.getDate() + 7);
           loopQuery(eventName, current_date, totalResults);
         }
         
