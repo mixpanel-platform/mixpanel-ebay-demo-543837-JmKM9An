@@ -45,29 +45,12 @@
           params['from'] = dateRange.from.toISOString().substring(0, 10);
           params['to'] = dateRange.to.toISOString().substring(0, 10);
           params['born_event'] = eventName1;
-          var range =  Math.floor((Date.parse(dateRange.to) - Date.parse(dateRange.from)) / 86400000);
           
           if (eventName1 && eventName2) {
             var current_date = dateRange.from;
             MP.api.retention(eventName2, params).done(function(results) {
                 data = results.values();
-                processResults(data, eventName2, current_date, {});
-            });
-          }
-        }
-        
-        var processResults = function(data, eventName, current_date, totalResults) {
-          totalResults[current_date.toISOString().substring(0, 10)] = data[current_date.toISOString().substring(0, 10)];
-          current_date.setDate(current_date.getDate() + 7);
-          loopQuery(eventName, current_date, totalResults);
-        }
-        
-        var loopQuery = function(eventName, current_date, totalResults){
-          params['from'] = current_date.toISOString().substring(0, 10);
-          if(params['from'] != params['to']){
-            MP.api.retention(eventName, params).done(function(results) {
-              data = results.values();
-              eventTable.MPTable('setData', finalResults);
+                eventTable.MPTable('setData', data);
             });
           }
         }
