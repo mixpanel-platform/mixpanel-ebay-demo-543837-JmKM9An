@@ -32,8 +32,8 @@
         var params = {
           'from': '2015-01-01', //moment(),
           'to': '2015-01-01', //moment(),
-          'unit': 'week',
-          'interval_count': 60,
+          'unit': 'month',
+          'interval_count': 12,
           'born_event': '$signup'
         };
           
@@ -67,56 +67,9 @@
           if(params['from'] != params['to']){
             MP.api.retention(eventName, params).done(function(results) {
               data = results.values();
-              processResults(data, eventName, current_date, totalResults);
+              eventTable.MPTable('setData', finalResults);
             });
           }
-          else{
-            plotResults(current_date, totalResults);
-          }
-        }
-        
-        var plotResults = function(current_date, totalResults) {
-          current_date.setDate(current_date.getDate() - 1);
-          finalResults = {};
-          sumFirst = 0;
-          sums = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0};
-          var results_keys = Object.keys(totalResults);
-          console.log(totalResults);
-          for(i=0; i<results_keys.length; i++){
-            if(current_date.toISOString().substring(9, 10) == '1'){
-              if(typeof totalResults[current_date.toISOString().substring(0, 10)] === 'undefined'){
-                finalResults[current_date.toISOString().substring(0, 10)] = {'$': 0};
-              }
-              else{
-                finalResults[current_date.toISOString().substring(0, 10)] = {'$': 0};
-                finalResults[current_date.toISOString().substring(0, 10)]['$'] = totalResults[current_date.toISOString().substring(0, 10)]['first'] - sumFirst;
-                var counts_keys = Object.keys(totalResults[current_date.toISOString().substring(0, 10)]['counts']);
-                for(j=0; j<counts_keys.length; j++){
-                  finalResults[current_date.toISOString().substring(0, 10)][j] = totalResults[current_date.toISOString().substring(0, 10)]['counts'][j] - sums[j];
-                  sums[j] = totalResults[current_date.toISOString().substring(0, 10)]['counts'][j];
-                }
-                sumFirst = 0;
-                sums = {0:0, 1:0, 2:0, 3:0,4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0};
-              }
-            }
-            else{
-              if(typeof totalResults[current_date.toISOString().substring(0, 10)] === 'undefined'){
-                finalResults[current_date.toISOString().substring(0, 10)] = {'$': 0};
-              }
-              else{
-                finalResults[current_date.toISOString().substring(0, 10)] = {'$': 0};
-                finalResults[current_date.toISOString().substring(0, 10)]['$'] = totalResults[current_date.toISOString().substring(0, 10)]['first'] - sumFirst;
-                sumFirst = totalResults[current_date.toISOString().substring(0, 10)]['first'];
-                var counts_keys = Object.keys(totalResults[current_date.toISOString().substring(0, 10)]['counts']);
-                for(j=0; j<counts_keys.length; j++){
-                  finalResults[current_date.toISOString().substring(0, 10)][j] = totalResults[current_date.toISOString().substring(0, 10)]['counts'][j] - sums[j];
-                  sums[j] = totalResults[current_date.toISOString().substring(0, 10)]['counts'][j];
-                }
-              }
-            }
-            current_date.setDate(current_date.getDate() - 1);
-          }
-          eventTable.MPTable('setData', finalResults);
         }
         
         dateSelect.on('change', function(e, dateRange) {
