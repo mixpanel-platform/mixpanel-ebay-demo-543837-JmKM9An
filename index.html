@@ -58,16 +58,30 @@
         var processResults = function(data) {
           console.log(data);
           var keys = Object.keys(data);
-          var finalResults = {};
+          var results = {};
           for(i=0; i<keys.length; i++) {
-            finalResults[keys[i]] = {};
-            finalResults[keys[i]]['$'] = 0;
-            finalResults[keys[i]]['$'] = data[keys[i]]['first'];
+            results[keys[i]] = {};
+            results[keys[i]]['$'] = 0;
+            results[keys[i]]['$'] = data[keys[i]]['first'];
             var counts = Object.keys(data[keys[i]]['counts']);
             for(j=0; j<counts.length; j++) {
-              finalResults[keys[i]][j+1] = 0;
-              finalResults[keys[i]][j+1] = data[keys[i]]['counts'][counts[j]];
+              results[keys[i]][j+1] = 0;
+              results[keys[i]][j+1] = data[keys[i]]['counts'][counts[j]];
             }
+          }
+          console.log(results);
+          for(i=0; i<Object.keys(results).length; i++) {
+            var mostKeys = 0;
+            var dates = Object.keys(results);
+            var marker = 0;
+            for(j=0; j<dates.length; j++) {
+              var keyCount = Object.keys(results[dates[j]]);
+              if(keyCount > mostKeys){
+                mostKeys = keyCount;
+                marker = j;
+              }
+            }
+            finalResults[dates[marker]] = results[dates[marker]]; 
           }
           eventTable.MPTable('setData', finalResults);
         }
